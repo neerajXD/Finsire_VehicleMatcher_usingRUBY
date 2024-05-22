@@ -3,7 +3,7 @@
 
 
 
-```markdown
+
 # VehicleMatcher
 
 VehicleMatcher is a Ruby on Rails application that provides an API for matching user input of vehicle model names to a predefined list of database names and returns the best match along with a similarity score.
@@ -174,5 +174,5 @@ If you wish to contribute to the project, please follow these steps:
 ## Contact
 
 For any questions or inquiries, please contact `08neerajp@gmail.com`.
-```
+
 
