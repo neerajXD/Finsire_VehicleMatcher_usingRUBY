@@ -1,4 +1,4 @@
-**Output**
+# Output
 ![image](https://github.com/neerajXD/Finsire_VehicleMatcher_usingRUBY/assets/91602130/2d66431a-8160-46a6-8136-9ffb9925c6e8)
 
 
@@ -12,8 +12,8 @@ VehicleMatcher is a Ruby on Rails application that provides an API for matching 
 
 ### Prerequisites
 
-- Ruby (version 2.7.0 or higher)
-- Rails (version 6.0 or higher)
+- Ruby (version 3.2.4 )
+- Rails (version 7.1.3.3 )
 - Git
 - Bundler
 
@@ -22,7 +22,7 @@ VehicleMatcher is a Ruby on Rails application that provides an API for matching 
 1. **Clone the repository:**
 
    ```sh
-   git clone https://github.com/your-username/VehicleMatcher.git
+   git clone https://github.com/neerajXD/Finsire_VehicleMatcher_usingRUBY.git
    cd VehicleMatcher
    ```
 
@@ -64,7 +64,7 @@ VehicleMatcher is a Ruby on Rails application that provides an API for matching 
 You can make a request to the API endpoint by sending a GET request with the `input` parameter. For example:
 
 ```sh
-curl "http://localhost:3000/match?input=FORD INDIA PVT LTD-FIGOASPIRE 1.2 PETROL TREND+MT"
+"http://localhost:3000/match?input=FORD INDIA PVT LTD-FIGOASPIRE 1.2 PETROL TREND+MT"
 ```
 
 ### Example Response
@@ -85,58 +85,43 @@ The API will respond with a JSON object like this:
 The main logic for string matching is implemented in the `StringMatchingController`. Here's a brief overview of the controller:
 
 ```ruby
+require 'amatch'
+
 class StringMatchingController < ApplicationController
+  DATABASE_NAMES = [
+    "ford_aspire", "ford_ecosport", "ford_endeavour", "ford_figo",
+    "honda_amaze", "honda_city", "honda_wr_v",
+    "hyundai_aura", "hyundai_grand_i10", "hyundai_i10",
+    "jeep_compass", "jeep_meridian",
+    "kia_carens", "kia_seltos", "kia_sonet",
+    "land_rover_defender",
+    "mahindra_scorpio", "mahindra_thar", "mahindra_xuv300", "mahindra_xuv400", "mahindra_xuv700",
+    "maruti_celerio", "maruti_suzuki_brezza", "maruti_suzuki_s_presso", "maruti_suzuki_swift", "maruti_suzuki_wagonr", "maruti_suzuki_xl6",
+    "mg_astor", "mg_gloster", "mg_hector", "mg_zs_ev",
+    "renault_kiger", "renault_triber",
+    "skoda_kushaq", "skoda_slavia",
+    "tata_harrier", "tata_punch", "tata_tiago",
+    "toyota_camry", "toyota_fortuner", "toyota_fortuner_legender", "toyota_glanza", "toyota_innova_crysta"
+  ]
+
   def match
-    user_input = params[:input]
-    database_names = [
-      "ford_aspire", "ford_ecosport", "ford_endeavour", "ford_figo", 
-      "honda_amaze", "honda_city", "honda_wr_v", "hyundai_aura", 
-      "hyundai_grand_i10", "hyundai_i10", "jeep_compass", "jeep_meridian", 
-      "kia_carens", "kia_seltos", "kia_sonet", "land_rover_defender", 
-      "mahindra_scorpio", "mahindra_thar", "mahindra_xuv300", 
-      "mahindra_xuv400", "mahindra_xuv700", "maruti_celerio", 
-      "maruti_suzuki_brezza", "maruti_suzuki_s_presso", "maruti_suzuki_swift", 
-      "maruti_suzuki_wagonr", "maruti_suzuki_xl6", "mg_astor", 
-      "mg_gloster", "mg_hector", "mg_zs_ev", "renault_kiger", 
-      "renault_triber", "skoda_kushaq", "skoda_slavia", "tata_harrier", 
-      "tata_punch", "tata_tiago", "toyota_camry", "toyota_fortuner", 
-      "toyota_fortuner_legender", "toyota_glanza", "toyota_innova_crysta"
-    ]
+    user_input = params[:input].downcase
 
-    best_match, similarity = find_best_match(user_input, database_names)
-    render json: { best_match: best_match, similarity: similarity }
-  end
+    best_match = ""
+    best_score = 0
 
-  private
-
-  def preprocess(string)
-    string.gsub(/[^a-zA-Z0-9\s]/, '').downcase.strip
-  end
-
-  def string_similarity(a, b)
-    a_sim = a.scan(/./)
-    b_sim = b.scan(/./)
-    intersection = (a_sim & b_sim).size
-    union = (a_sim | b_sim).size
-    (intersection.to_f / union)
-  end
-
-  def find_best_match(user_input, database_names)
-    preprocessed_input = preprocess(user_input)
-    best_match = nil
-    highest_similarity = 0.0
-
-    database_names.each do |db_name|
-      similarity = string_similarity(preprocessed_input, db_name)
-      if similarity > highest_similarity
-        highest_similarity = similarity
+    DATABASE_NAMES.each do |db_name|
+      score = db_name.pair_distance_similar(user_input)
+      if score > best_score
+        best_score = score
         best_match = db_name
       end
     end
 
-    [best_match, highest_similarity]
+    render json: { best_match: best_match, score: best_score }
   end
 end
+
 ```
 
 ### Running Tests
@@ -156,9 +141,7 @@ You can add and run tests to ensure the correctness of your application. For exa
    bundle exec rspec
    ```
 
-## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ## Contributing
 
