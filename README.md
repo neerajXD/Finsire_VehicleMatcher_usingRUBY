@@ -1,5 +1,6 @@
-Answer Screenshots to this question are provided below
-Q1:
+**Answer Screenshots to this question are provided below**
+
+**Q1:**
 String Matching Algo
 
 You have some strings of Vehicle Model Names, stored in database.Mentioned “Database Names”
@@ -91,7 +92,7 @@ Database Names
 "toyota_innova_crysta"]
 
 
-Ans:
+**Answer:**
 ![image](https://github.com/neerajXD/Finsire_VehicleMatcher_usingRUBY/assets/91602130/2d66431a-8160-46a6-8136-9ffb9925c6e8)
 
 ![image](https://github.com/neerajXD/Finsire_VehicleMatcher_usingRUBY/assets/91602130/87d6d526-e41a-453b-bd3d-e9ca76cdf888)
